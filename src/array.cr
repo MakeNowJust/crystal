@@ -1672,7 +1672,7 @@ class Array(T)
   # a.sort # => [1, 2, 3]
   # a      # => [3, 1, 2]
   # ```
-  def sort(*, stable = false) : Array(T)
+  def sort(*, stable : Bool = false) : Array(T)
     dup.sort!(stable: stable)
   end
 
@@ -1690,7 +1690,7 @@ class Array(T)
   # b # => [3, 2, 1]
   # a # => [3, 1, 2]
   # ```
-  def sort(*, stable = false, &block : T, T -> U) : Array(T) forall U
+  def sort(*, stable : Bool = false, &block : T, T -> U) : Array(T) forall U
     {% unless U <= Int32? %}
       {% raise "expected block to return Int32 or Nil, not #{U}" %}
     {% end %}
@@ -1706,7 +1706,7 @@ class Array(T)
   # a.sort!
   # a # => [1, 2, 3]
   # ```
-  def sort!(*, stable = false) : Array(T)
+  def sort!(*, stable : Bool = false) : Array(T)
     Slice.new(to_unsafe, size).sort!(stable: stable)
     self
   end
@@ -1724,7 +1724,7 @@ class Array(T)
   # a.sort! { |a, b| b <=> a }
   # a # => [3, 2, 1]
   # ```
-  def sort!(*, stable = false, &block : T, T -> U) : Array(T) forall U
+  def sort!(*, stable : Bool = false, &block : T, T -> U) : Array(T) forall U
     {% unless U <= Int32? %}
       {% raise "expected block to return Int32 or Nil, not #{U}" %}
     {% end %}
@@ -1743,7 +1743,7 @@ class Array(T)
   # b # => ["fig", "pear", "apple"]
   # a # => ["apple", "pear", "fig"]
   # ```
-  def sort_by(*, stable = false, &block : T -> _) : Array(T)
+  def sort_by(*, stable : Bool = false, &block : T -> _) : Array(T)
     dup.sort_by!(stable: stable) { |e| yield(e) }
   end
 
@@ -1756,7 +1756,7 @@ class Array(T)
   # a.sort_by! { |word| word.size }
   # a # => ["fig", "pear", "apple"]
   # ```
-  def sort_by!(*, stable = false, &block : T -> _) : Array(T)
+  def sort_by!(*, stable : Bool = false, &block : T -> _) : Array(T)
     sorted = map { |e| {e, yield(e)} }.sort!(stable: stable) { |x, y| x[1] <=> y[1] }
     @size.times do |i|
       @buffer[i] = sorted.to_unsafe[i][0]
